@@ -1,10 +1,44 @@
-.Example {
-  margin: 2rem;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif;
 }
 
-.Example-button {
-  margin: 2rem;
-  padding: 1rem;
-  background: #ddd;
-  cursor: pointer;
+.attending {
+  display: flex;
+}
+
+.Example {
+  margin: 10%;
+}
+
+.app {
+  background-color: #EEEEEE;
+  border: solid 1px;
+  width: 20%;
+}
+
+.x-button {
+  background-color: #F44335;
+  color: white;
+  width: 42px;
+  padding: 2px;
+  border:none;
+  outline: none;
+
+
+}
+
+.check-button {
+  background-color: #4CAF4F;
+  color: white;
+  width: 42px;
+  padding: 2px;
+  border:none;
+  outline: none;
+
+
 }

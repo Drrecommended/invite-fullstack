@@ -5,27 +5,29 @@ import { useSelector, useDispatch } from "react-redux"
 
 // 2. action definitions
 const GET_USER = "example/GET_USER"
-const USER_GOING = "example/USER_GOING"
-const USER_DECLINE = "example/USER_DECLINE"
+const GET_GOING = "example/GET_GOING"
+const GET_DECLINE = "example/GET_DECLINE"
 
 
 // 3. initial state
 const inviteState = {
   currentUser: {},
-  notGoing: [{}],
-  going: [{}]
+  going: [{}],
+  notGoing: [{}]
+  
 
 }
 
 // 4. reducer
 export default (state = inviteState, action) => {
+  console.log(action)
   switch (action.type) {
     case GET_USER:
       return { ...state, currentUser: action.payload }
-    // case USER_GOING:
-    //   return { ...state, example: initialState.example }
-    // case USER_DECLINE:
-    //     return { ...state, }
+    case GET_GOING:
+      return { ...state, going: inviteState.going }
+    case GET_DECLINE:
+        return { ...state, notGoing: inviteState.notGoing }
     default:
       return state
   }
@@ -33,15 +35,57 @@ export default (state = inviteState, action) => {
 
 // 5. action creator
 
-
-
 function getUserData() {
   return dispatch => {
     axios.get('/api').then(resp => {
       dispatch({
         type: GET_USER,
         payload: resp.data
+      }) 
+    })
+  }
+}
+
+function getGoingUser() {
+  console.log('called')
+  return dispatch => {
+    axios.get('/api/going').then(resp => {
+      dispatch({
+        type: GET_GOING,
+        payload: resp.going
       })
+      console.log('called inside axios')
+      dispatch(getUserData())
+    })
+  }
+}
+
+function getNotGoingUser() {
+  return dispatch => {
+    axios.get('/api/not-going').then(resp => {
+      dispatch({
+        type: GET_DECLINE,
+        payload: resp.data
+      })
+      dispatch(getUserData())
+    })
+  }
+}
+
+function userGoing(user) {
+  return dispatch => {
+    const newUser = { ...user, going: true }
+    axios.post('/api/add-user', newUser).then(resp => {
+      dispatch(getUserData())
+    })
+  }
+}
+
+function userDecline(user) {
+  return dispatch => {
+    const newUser = { ...user, going: false }
+    axios.post('/api/add-user', newUser).then(resp => {
+      dispatch(getUserData())
     })
   }
 }
@@ -52,15 +96,25 @@ function getUserData() {
 export function useInvite() {
   const dispatch = useDispatch()
   const user = useSelector(appState => appState.inviteState.currentUser)
+  const usersGoing = useSelector(appState => appState.inviteState.going)
+  const usersNotGoing = useSelector(appState => appState.inviteState.notGoing)
+  const getNewUser = () => dispatch(getUserData())
 
-  const displayUser = () => dispatch(getUserData())
-  // const asyncaction = () => dispatch(someAsyncAction())
-  // const reset = () => dispatch(resetAction())
-  // const getExample = () => dispatch(getExampleData())
+  const going = (user) => dispatch(userGoing(user))
+  const decline = (user) => dispatch(userDecline(user))
+  const goingUsers = (user) => dispatch(getGoingUser(user))
+  const notGoingUsers = (user) => dispatch(getNotGoingUser(user))
 
-  useEffect(() => {
-    console.log("mounting component")
-  }, [])
 
-  return { displayUser }
+
+
+  return { 
+    user, 
+    usersGoing,
+    usersNotGoing,
+    goingUsers, 
+    notGoingUsers, 
+    getNewUser, 
+    going, 
+    decline }
 }
