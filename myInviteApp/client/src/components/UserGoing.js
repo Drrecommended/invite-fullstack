@@ -4,22 +4,22 @@ import '../styles/Example.css'
 
 
 export default () => {
-  const { user, usersGoing, goingUsers } = useInvite()
+  const { usersGoing, goingUsers } = useInvite()
   useEffect(() => {
     goingUsers()
   }, [])
   return (
     <div className="Example">
-      {usersGoing.map(item => {
+      {usersGoing.map(user => {
         return (
           <div className="app">
           <div>
-            <div>
-              <img src={user.picture} />
+            <div className="image-div">
+              <img className="user-image" src={user.picture}  alt="userpic"/>
             </div>
-            <div>Name: {user.first} {user.last}</div>
-            <div>Phone: {user.phone}</div>
-            <div>Email: {user.email}</div>
+            <div className="info"><strong>Name:</strong> {user.first} {user.last}</div>
+            <div className="info"><strong>Phone:</strong> {user.phone}</div>
+            <div className="info"><strong>Email:</strong> {user.email}</div>
           </div>
       </div>
         )

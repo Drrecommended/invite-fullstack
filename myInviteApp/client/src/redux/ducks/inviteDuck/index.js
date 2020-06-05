@@ -1,6 +1,5 @@
 // 1. imports
 import axios from 'axios'
-import { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
 // 2. action definitions
@@ -14,20 +13,17 @@ const inviteState = {
   currentUser: {},
   going: [{}],
   notGoing: [{}]
-  
-
 }
 
 // 4. reducer
 export default (state = inviteState, action) => {
-  console.log(action)
   switch (action.type) {
     case GET_USER:
       return { ...state, currentUser: action.payload }
     case GET_GOING:
-      return { ...state, going: inviteState.going }
+      return { ...state, going: action.payload}
     case GET_DECLINE:
-        return { ...state, notGoing: inviteState.notGoing }
+        return { ...state, notGoing: action.payload}
     default:
       return state
   }
@@ -47,15 +43,12 @@ function getUserData() {
 }
 
 function getGoingUser() {
-  console.log('called')
   return dispatch => {
     axios.get('/api/going').then(resp => {
       dispatch({
         type: GET_GOING,
-        payload: resp.going
+        payload: resp.data
       })
-      console.log('called inside axios')
-      dispatch(getUserData())
     })
   }
 }
@@ -67,7 +60,6 @@ function getNotGoingUser() {
         type: GET_DECLINE,
         payload: resp.data
       })
-      dispatch(getUserData())
     })
   }
 }
@@ -84,7 +76,7 @@ function userGoing(user) {
 function userDecline(user) {
   return dispatch => {
     const newUser = { ...user, going: false }
-    axios.post('/api/add-user', newUser).then(resp => {
+    axios.post('/api/add-user', newUser).then(() => {
       dispatch(getUserData())
     })
   }
